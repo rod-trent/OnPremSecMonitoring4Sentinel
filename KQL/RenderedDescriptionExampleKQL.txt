@@ -1,0 +1,7 @@
+//Example the parse-where operator to split the RenderedDescription column
+
+Event
+| where Computer contains "SCOM"
+| where EventID == "4103"
+| parse-where RenderedDescription with * "User =" User " " *
+| project User
