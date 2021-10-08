@@ -3,5 +3,7 @@
 Event
 | where Computer contains "SCOM"
 | where EventID == "4103"
-| parse-where RenderedDescription with * "User =" User " " *
-| project User
+| parse-where RenderedDescription with * "User =" User " " * 
+| parse-where RenderedDescription with * "Host Name = " Host_Name " " *
+| parse-where RenderedDescription with * "Command Type = " Command_Type " " *
+| project User, Host_Name, Command_Type
