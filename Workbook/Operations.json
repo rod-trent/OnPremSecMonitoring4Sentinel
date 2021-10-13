@@ -1,0 +1,195 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "## On-Prem Security Monitoring for Sentinel Workbook\n---\n\nWelcome to the Workbook for the <a href=\"https://cda.ms/2Vc\" target=\"_blank\">On-Prem Security Monitoring for Sentinel.</a>"
+      },
+      "name": "text - 2"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Alert\n| where TimeGenerated >= (90d)\n| where AlertName contains \"On Prem Security Monitoring\"\n| where SourceSystem == \"OpsManager\"\n| parse-where AlertContext with * \"<EventNumber>\" SCOMEventID \"<\" * \n| summarize count() by SCOMEventID",
+        "size": 3,
+        "title": "Event IDs over the past 90 days",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "visualization": "piechart",
+        "tileSettings": {
+          "showBorder": false,
+          "titleContent": {
+            "columnMatch": "SCOMEventID",
+            "formatter": 1
+          },
+          "leftContent": {
+            "columnMatch": "count_",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            },
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "SCOMEventID",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "count_",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        }
+      },
+      "customWidth": "50",
+      "name": "EventID"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Alert\r\n| where TimeGenerated >= (90d)\r\n| where AlertName contains \"On Prem Security Monitoring\"\r\n| where SourceSystem == \"OpsManager\"\r\n| parse-where AlertContext with * \"<EventNumber>\" SCOMEventID \"<\" * \r\n| parse-where AlertContext with * \"<UserName>\" User \"<\" *\r\n| summarize count() by User",
+        "size": 3,
+        "title": "Captured Users over the past 90 days",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "visualization": "piechart"
+      },
+      "customWidth": "50",
+      "name": "Users"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Alert\r\n| where TimeGenerated >= (90d)\r\n| where AlertName contains \"On Prem Security Monitoring\"\r\n| where SourceSystem == \"OpsManager\"\r\n| parse-where AlertContext with * \"<EventNumber>\" SCOMEventID \"<\" * \r\n| parse-where AlertContext with * \"<UserName>\" User \"<\" *\r\n| summarize count() by User, SCOMEventID",
+        "size": 0,
+        "title": "Events captured per user over 90 days",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "visualization": "table",
+        "tileSettings": {
+          "showBorder": false,
+          "titleContent": {
+            "columnMatch": "User",
+            "formatter": 1
+          },
+          "leftContent": {
+            "columnMatch": "count_",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            },
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        }
+      },
+      "name": "EventsByUser"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Alert\r\n| where TimeGenerated >= (90d)\r\n| where AlertName contains \"On Prem Security Monitoring\"\r\n| where SourceSystem == \"OpsManager\"\r\n| summarize count() by TimeGenerated",
+        "size": 0,
+        "title": "Timeline of when Events were captured",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "visualization": "timechart",
+        "chartSettings": {
+          "xAxis": "count_"
+        }
+      },
+      "customWidth": "50",
+      "name": "EventTimeline"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Alert\r\n| where TimeGenerated >= (90d)\r\n| where AlertName contains \"On Prem Security Monitoring\"\r\n| where SourceSystem == \"OpsManager\"\r\n| summarize count() by TimeGenerated",
+        "size": 0,
+        "title": "When alerts were generated by date/time",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "visualization": "table"
+      },
+      "customWidth": "50",
+      "name": "NewAlertsGrid"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Usage\r\n| where TimeGenerated >= (90d)\r\n//| where DataType == \"Alert\" and DataType \r\n| summarize ['Table Size'] =sum(Quantity) by ['Table Name'] =DataType,['IsBillable'] =IsBillable\r\n| order by ['Table Size']  desc",
+        "size": 0,
+        "title": "Top Tables",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "visualization": "table",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Table Size",
+              "formatter": 3,
+              "formatOptions": {
+                "palette": "coldHot"
+              },
+              "numberFormat": {
+                "unit": 13,
+                "options": {
+                  "style": "decimal"
+                }
+              }
+            }
+          ],
+          "filter": true
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "Table Name",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "Table Size",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        }
+      },
+      "name": "TableSizes"
+    }
+  ],
+  "fromTemplateId": "sentinel-UserWorkbook",
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
