@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?><ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <Manifest>
+    <Identity>
+      <ID>EnableSentinelMinimumCollection</ID>
+      <Version>1.0.0.0</Version>
+    </Identity>
+    <Name>EnableSentinelMinimumCollection</Name>
+    <References>
+      <Reference Alias="Windows">
+        <ID>Microsoft.Windows.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="OnPremSecurityMonitoringforSentinel">
+        <ID>OnPremSecurityMonitoringforSentinel</ID>
+        <Version>1.0.8.29</Version>
+        <PublicKeyToken>a6e03788df4b8847</PublicKeyToken>
+      </Reference>
+      <Reference Alias="SystemCenter">
+        <ID>Microsoft.SystemCenter.Library</ID>
+        <Version>7.0.8448.6</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+    </References>
+  </Manifest>
+  <Monitoring>
+    <Overrides>
+      <RulePropertyOverride ID="EnableCollect4825Events" Context="Windows!Microsoft.Windows.Server.OperatingSystem" Enforced="false" Rule="OnPremSecurityMonitoringforSentinel!Security.Monitoring.Sentinel.Collect4825Events" Property="Enabled">
+        <Value>true</Value>
+      </RulePropertyOverride>
+	  <RulePropertyOverride ID="EnableCollect4657Events" Context="Windows!Microsoft.Windows.Server.OperatingSystem" Enforced="false" Rule="OnPremSecurityMonitoringforSentinel!Security.Monitoring.Sentinel.Collect4657Events" Property="Enabled">
+        <Value>true</Value>
+      </RulePropertyOverride>
+	  <RulePropertyOverride ID="EnableCollect4663Events" Context="Windows!Microsoft.Windows.Server.OperatingSystem" Enforced="false" Rule="OnPremSecurityMonitoringforSentinel!Security.Monitoring.Sentinel.Collect4663Events" Property="Enabled">
+        <Value>true</Value>
+      </RulePropertyOverride>
+	  <RulePropertyOverride ID="EnableCollectScheduledTaskEvents" Context="Windows!Microsoft.Windows.Server.OperatingSystem" Enforced="false" Rule="OnPremSecurityMonitoringforSentinel!Security.Monitoring.Sentinel.CollectScheduledTaskEvents" Property="Enabled">
+        <Value>true</Value>
+      </RulePropertyOverride>
+	  <RulePropertyOverride ID="EnableCollect4719Events" Context="Windows!Microsoft.Windows.Server.OperatingSystem" Enforced="false" Rule="OnPremSecurityMonitoringforSentinel!Security.Monitoring.Sentinel.Collect4719Events" Property="Enabled">
+        <Value>true</Value>
+      </RulePropertyOverride>
+	  <RulePropertyOverride ID="EnableCollectUserAccountEvents" Context="Windows!Microsoft.Windows.Server.OperatingSystem" Enforced="false" Rule="OnPremSecurityMonitoringforSentinel!Security.Monitoring.Sentinel.CollectUserAccountEvents" Property="Enabled">
+        <Value>true</Value>
+      </RulePropertyOverride>
+	  <RulePropertyOverride ID="EnableCollectPasswordEvents" Context="Windows!Microsoft.Windows.Server.OperatingSystem" Enforced="false" Rule="OnPremSecurityMonitoringforSentinel!Security.Monitoring.Sentinel.CollectPasswordEvents" Property="Enabled">
+        <Value>true</Value>
+      </RulePropertyOverride>
+	  <RulePropertyOverride ID="EnableCollecGroupEvents" Context="Windows!Microsoft.Windows.Server.OperatingSystem" Enforced="false" Rule="OnPremSecurityMonitoringforSentinel!Security.Monitoring.Sentinel.CollectGroupEvents" Property="Enabled">
+        <Value>true</Value>
+      </RulePropertyOverride>
+	  <RulePropertyOverride ID="EnableCollectLockoutEvents" Context="Windows!Microsoft.Windows.Server.OperatingSystem" Enforced="false" Rule="OnPremSecurityMonitoringforSentinel!Security.Monitoring.Sentinel.CollectLockoutEvents" Property="Enabled">
+        <Value>true</Value>
+      </RulePropertyOverride>
+	  <RulePropertyOverride ID="EnableCollectFireWallEvents" Context="Windows!Microsoft.Windows.Server.OperatingSystem" Enforced="false" Rule="OnPremSecurityMonitoringforSentinel!Security.Monitoring.Sentinel.CollectFireWallEvents" Property="Enabled">
+        <Value>true</Value>
+      </RulePropertyOverride>
+    </Overrides>
+  </Monitoring>
+  <Presentation>
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="false">
+      <DisplayStrings>
+        <DisplayString ElementID="EnableSentinelMinimumCollection">
+          <Name>EnableSentinelMinimumCollection</Name>
+          <Description>This MP enables the minimum collection rules needed for Azure Sentinel with the exception of 8000-8007 and 8722 events. These are because they are more app specific and harder to target without causing other issues.
+
+A ful list is here:
+https://docs.microsoft.com/en-us/azure/sentinel/connect-windows-security-events?tabs=LAA</Description>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPack>
