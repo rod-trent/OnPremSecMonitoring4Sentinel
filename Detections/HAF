@@ -1,0 +1,37 @@
+id: ef4d056e-d6e1-4929-b852-361519562ac9
+name: On-Prem4Sentinel: HAFNIUM New UM Service Child Process
+description: |
+  'This query looks for new processes being spawned by the Exchange UM service where that process has not previously been observed before.'
+severity: Medium
+requiredDataConnectors: []
+queryFrequency: 1d
+queryPeriod: 14d
+triggerOperator: gt
+triggerThreshold: 0
+tactics:
+  - InitialAccess
+relevantTechniques:
+  - T1190
+query: |
+let lookback = 14d;
+let timeframe = 1d;
+Alert
+| where TimeGenerated > ago(lookback) and TimeGenerated < ago(timeframe)
+| parse-where AlertContext with * "<EventNumber>" SCOMEventID "<" * 
+| parse-where AlertContext with * "<UserName>" User "<" *
+| parse-where AlertContext with * "<LoggingComputer>" HOST "<" *
+| parse-where AlertContext with * "ssName" Process "<" * 
+| where SCOMEventID == "4688"
+| where Process has_any ("umworkerprocess.exe", "UMService.exe")
+| extend AccountCustomEntity = User, HostCustomEntity = SourceFullName
+entityMappings:
+  - entityType: Account
+    fieldMappings:
+      - identifier: User
+        columnName: AccountCustomEntity
+  - entityType: Host
+    fieldMappings:
+      - identifier: SourceFullName
+        columnName: HostCustomEntity
+version: 1.0.0
+kind: scheduled
