@@ -1,0 +1,17 @@
+//Parsing the AlertContext rawdata field
+
+Alert 
+| where TimeGenerated >= ago(timeframe)
+| where AlertName contains "On Prem Security Monitoring"
+| where SourceSystem == "OpsManager"
+| parse-where AlertContext with * "<PublisherName>" Publisher "<" * 
+| parse-where AlertContext with * "<EventSourceName>" EventSource "<" * 
+| parse-where AlertContext with * "<Channel>" Channel "<" * 
+| parse-where AlertContext with * "<LoggingComputer>" LoggingComputer "<" * 
+| parse-where AlertContext with * "<EventNumber>" SCOMEventID "<" * 
+| parse-where AlertContext with * "<EventCategory>" EventCategory "<" * 
+| parse-where AlertContext with * "<EventLevel>" EventLevel "<" * 
+| parse-where AlertContext with * "<UserName>" User "<" *
+| parse-where AlertContext with * "<EventDescription><![CDATA[" EventDescription "]]" *
+| parse-where AlertContext with * "<LoggingComputer>" HOST "<" *
+| project Publisher, EventSource, Channel, LoggingComputer, SCOMEventID, EventCategory, EventLevel, EventDescription, User, HOST
