@@ -1,0 +1,34 @@
+id: e7becd81-5c05-4163-a8c1-8fdb6266ea4a
+name: On-Prem4Sentinel: FoggyWeb backdoor
+description: |
+  'Identifies a match related to FoggyWeb backdoor by the threat actor NOBELIUM. monitored by the "On-Prem Security Monitoring for Sentinel" solution.'
+severity: High
+requiredDataConnectors: []
+queryFrequency: 1d
+queryPeriod: 1d
+triggerOperator: gt
+triggerThreshold: 0
+tactics:
+  - Collection
+relevantTechniques:
+  - T1005
+query: |
+Event
+| where SourceSystem == "OpsManager"
+| where EventID == "4688"
+| parse-where RenderedDescription with * "New Process Name:	" Process " " * 
+| parse-where RenderedDescription with * "Process Command Line:	" CommandLine " " * 
+| parse-where RenderedDescription with * "Account Name:		" User " " * 
+| where Process contains "Microsoft.IdentityServer.ServiceHost.exe" or CommandLine contains "Microsoft.IdentityServer.ServiceHost.exe"
+| extend AccountCustomEntity = User, HostCustomEntity = Computer
+entityMappings:
+  - entityType: Account
+    fieldMappings:
+      - identifier: User
+        columnName: AccountCustomEntity
+  - entityType: Host
+    fieldMappings:
+      - identifier: Computer
+        columnName: HostCustomEntity
+version: 1.0.0
+kind: scheduled
