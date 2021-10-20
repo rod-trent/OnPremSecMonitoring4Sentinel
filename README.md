@@ -16,7 +16,7 @@ Review the following resources for setup, configuration, and customization:
 
 * <a href="https://cda.ms/2YQ" target="_blank">Syslog Support for SCOM using On Prem Security Monitoring for Sentinel</a><br>
 
-<br>Follow and interact with the authors on Twitter:
+<br>Follow and interact with the authors for questions, suggestions, and support on Twitter:
 
 * <a href="https://cda.ms/2YZ" target="_blank">Nathan Gau on Twitter</a><br>
 * <a href="https://cda.ms/2Z0" target="_blank">Cameron Fuller on Twitter</a><br>
