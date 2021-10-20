@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?><ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <!--
+  This is a sample management pack provided to help send custom events to the cloud using the libaries available to you. They are not exposed via the SCOM console. I've documnted the details here:
+  
+  https://nathangau.wordpress.com/2021/10/20/forwarding-additional-alerts-and-or-events-into-the-cloud/
+  
+  -->
+  
+  <Manifest>
+    <Identity>
+      <ID>SampleForwardtoCloud</ID>
+      <Version>1.0.0.0</Version>
+    </Identity>
+    <Name>SampleForwardtoCloud</Name>
+    <References>
+      <Reference Alias="SCDW">
+        <ID>Microsoft.SystemCenter.DataWarehouse.Library</ID>
+        <Version>10.19.10050.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="MicrosoftWindowsLibrary7585010">
+        <ID>Microsoft.Windows.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+	  <!-- The two references below are the management packs are what you'll need to reference in your solution. The version number listed here is the minimum version so you don't need to change it.
+	  
+		Copy these two refernces into your custom MP.-->
+      <Reference Alias="OnPremSecurityMonitoringforSentinel">
+        <ID>OnPremSecurityMonitoringforSentinel</ID>
+        <Version>1.0.8.29</Version>
+        <PublicKeyToken>a6e03788df4b8847</PublicKeyToken>
+      </Reference>
+      <Reference Alias="MIT">
+        <ID>Microsoft.IntelligencePacks.Types</ID>
+        <Version>8.0.1.977</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="SystemLibrary7585010">
+        <ID>System.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="SystemCenter">
+        <ID>Microsoft.SystemCenter.Library</ID>
+        <Version>7.0.8448.6</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Health">
+        <ID>System.Health.Library</ID>
+        <Version>7.0.8443.6</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+    </References>
+  </Manifest>
+  <Monitoring>
+    <Rules>
+      <Rule ID="Collect4610and4611tocloud" Enabled="true" Target="MicrosoftWindowsLibrary7585010!Microsoft.Windows.Server.OperatingSystem" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>EventCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="MicrosoftWindowsLibrary7585010!Microsoft.Windows.EventCollector">
+            <ComputerName>$Target/Host/Property[Type="MicrosoftWindowsLibrary7585010!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+            <LogName>Security</LogName>
+            <AllowProxying>false</AllowProxying>
+            <Expression>
+              <Or>
+                <Expression>
+                  <SimpleExpression>
+                    <ValueExpression>
+                      <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                    </ValueExpression>
+                    <Operator>Equal</Operator>
+                    <ValueExpression>
+                      <Value Type="UnsignedInteger">4610</Value>
+                    </ValueExpression>
+                  </SimpleExpression>
+                </Expression>
+                <Expression>
+                  <SimpleExpression>
+                    <ValueExpression>
+                      <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                    </ValueExpression>
+                    <Operator>Equal</Operator>
+                    <ValueExpression>
+                      <Value Type="UnsignedInteger">4611</Value>
+                    </ValueExpression>
+                  </SimpleExpression>
+                </Expression>
+              </Or>
+            </Expression>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+		<!--
+			The two write actions below are standard event collection write actions that send data to the DB/DW. If you want to send data only to the cloud, remove these write actions.
+			I would recommend that for most security events as they can clog up the SCOM install quick and cause performance issues.
+		-->
+          <WriteAction ID="WriteToDB" TypeID="SystemCenter!Microsoft.SystemCenter.CollectEvent" />
+          <WriteAction ID="WriteToDW" TypeID="SCDW!Microsoft.SystemCenter.DataWarehouse.PublishEventData" />
+		  
+		  <!-- Uncomment the following write action to write an event to the cloud.-->
+		  <!--
+		  <WriteAction ID=”CloudEvent” TypeID=”MIT!Microsoft.SystemCenter.CollectCloudGenericEvent”>
+		  -->
+        </WriteActions>
+      </Rule>
+      <Rule ID="Alert4611tocloud" Enabled="true" Target="MicrosoftWindowsLibrary7585010!Microsoft.Windows.Server.OperatingSystem" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>Alert</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="MicrosoftWindowsLibrary7585010!Microsoft.Windows.EventProvider">
+            <ComputerName>$Target/Host/Property[Type="MicrosoftWindowsLibrary7585010!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+            <LogName>Security</LogName>
+            <Expression>
+              <SimpleExpression>
+                <ValueExpression>
+                  <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                </ValueExpression>
+                <Operator>Equal</Operator>
+                <ValueExpression>
+                  <Value Type="UnsignedInteger">4611</Value>
+                </ValueExpression>
+              </SimpleExpression>
+            </Expression>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+		<!-- This write action is a standard alerting write action as developed in SCOM. This can be customized though in this case I created a pretty generic alert.
+		To send the alert to the cloud, you will need to copy everything between the write action tags (starting with priority all the way to Custom 10/>
+		If you don't want the alert in the SCOM console, you can delete this write action.
+		-->
+          <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
+            <Priority>1</Priority>
+            <Severity>2</Severity>
+            <AlertName />
+            <AlertDescription />
+            <AlertOwner />
+            <AlertMessageId>$MPElement[Name="Alert4611tocloud.AlertMessage"]$</AlertMessageId>
+            <AlertParameters>
+              <AlertParameter1>$Data[Default='']/EventDescription$</AlertParameter1>
+            </AlertParameters>
+            <Suppression />
+            <Custom1 />
+            <Custom2 />
+            <Custom3 />
+            <Custom4 />
+            <Custom5 />
+            <Custom6 />
+            <Custom7 />
+            <Custom8 />
+            <Custom9 />
+            <Custom10 />
+          </WriteAction>
+		  <!-- To generate an alert in Log Analytics for use in Sentinel or in Azure Monitor, uncomment the following line. However, before you do that, you'll want to paste the data copied above
+		  into the space between the write action tags below. This will essentially pass the same alert information into the cloud-->
+		  <!--
+		  
+		<WriteAction ID=”CloudAlert” TypeID=”Security!SecurityMonitoringForSentinel.WriteAlertToCloud”>
+  
+		</WriteAction>
+		  -->
+		<!-- Like the example above, you can also uncomment the following write action to also write the event to the cloud.-->
+		<!--
+		<WriteAction ID=”CloudEvent” TypeID=”MIT!Microsoft.SystemCenter.CollectCloudGenericEvent”>
+		-->
+        </WriteActions>
+      </Rule>
+    </Rules>
+  </Monitoring>
+  <Presentation>
+    <StringResources>
+      <StringResource ID="Alert4611tocloud.AlertMessage" />
+    </StringResources>
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="false">
+      <DisplayStrings>
+        <DisplayString ElementID="SampleForwardtoCloud">
+          <Name>SampleForwardtoCloud</Name>
+          <Description>this is a commented sample MP showing how to forward additional alerts/events into Log Analytics.</Description>
+        </DisplayString>
+        <DisplayString ElementID="Collect4610and4611tocloud">
+          <Name>Collect to Cloud: 4610 and 4611 events</Name>
+        </DisplayString>
+        <DisplayString ElementID="Alert4611tocloud">
+          <Name>Generate Alert 4611 event</Name>
+        </DisplayString>
+        <DisplayString ElementID="Alert4611tocloud.AlertMessage">
+          <Name>Generate Alert 4611 event</Name>
+          <Description>Event Description: {0}</Description>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPack>
