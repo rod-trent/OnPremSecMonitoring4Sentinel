@@ -4,7 +4,7 @@ This repository is dedicated to the "On-Prem Security Monitoring for Sentinel" s
 
 The On-Prem Security Monitoring for Sentinel solution is comprised of System Center Operations Manager management packs, KQL parsers, Analytics Rules, and an Azure Sentinel Workbook.
 
-<a href="https://cda.ms/2Yv target="_blank">Installing and Configuring On Prem Security Monitoring for Sentinel Integration</a><br><br>
+<a href="https://cda.ms/2Yv" target="_blank">Installing and Configuring On Prem Security Monitoring for Sentinel Integration</a><br><br>
 
 <a href="https://cda.ms/2Yw" target="_blank">On Prem Security Monitoring For Sentinel Management Pack Summary</a><br><br>
 
