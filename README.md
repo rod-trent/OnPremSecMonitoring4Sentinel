@@ -15,3 +15,9 @@ Review the following resources for setup, configuration, and customization:
 * <a href="https://cda.ms/2YL" target="_blank">Forwarding Additional Alerts and/or Events into the Cloud</a><br>
 
 * <a href="https://cda.ms/2YQ" target="_blank">Syslog Support for SCOM using On Prem Security Monitoring for Sentinel</a><br>
+
+<br>Follow and interact with the authors on Twitter:
+
+* <a href="https://cda.ms/2YZ" target="_blank">Nathan Gau on Twitter</a><br>
+* <a href="https://cda.ms/2Z0" target="_blank">Cameron Fuller on Twitter</a><br>
+* <a href="https://cda.ms/2Z1" target="_blank">Rod Trent on Twitter</a><br>
