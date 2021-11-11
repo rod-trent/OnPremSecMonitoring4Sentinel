@@ -1,0 +1,9 @@
+//Analytics Rule to capture failed logins
+
+let timeframe = 1d;
+let threshold = 20;
+Event
+| where SourceSystem == "OpsManager"
+| where EventID == "4625"
+| parse-where RenderedDescription with * "Account Name:		" User " " * 
+| extend AccountCustomEntity = User, HostCustomEntity = Computer
