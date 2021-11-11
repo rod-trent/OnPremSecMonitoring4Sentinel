@@ -5,5 +5,7 @@ let threshold = 20;
 Event
 | where SourceSystem == "OpsManager"
 | where EventID == "4625"
-| parse-where RenderedDescription with * "Account Name:		" User " " * 
-| extend AccountCustomEntity = User, HostCustomEntity = Computer
+//| parse-where RenderedDescription with * "Account Name:		" User " " * 
+| parse-where RenderedDescription with * "ed: 	Security ID:		NULL SID 	Account Name:		" User " " *
+| parse-where RenderedDescription with * "Source Network Address:	" IPADD " " *
+| extend AccountCustomEntity = User, HostCustomEntity = Computer, IPCustomEntity = IPADD
