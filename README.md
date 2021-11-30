@@ -22,4 +22,4 @@ Review the following resources for setup, configuration, and customization:
 * <a href="https://cda.ms/2Z0" target="_blank"><b>Cameron Fuller</b> on Twitter</a><br>
 * <a href="https://cda.ms/2Z1" target="_blank"><b>Rod Trent</b> on Twitter</a><br>
 
-To get back here, remember the easy link: https://aka.ms/SentinelHybrid
+To return back here, remember the easy link: https://aka.ms/SentinelHybrid
